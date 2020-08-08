@@ -24,7 +24,7 @@ function triggerLayer() {
         }
     );
 }
-
+/* triggerLayer() will be activated by Pay button
 var checkExist = setInterval(function() {
 	if (typeof Layer !== 'undefined') {
 		console.log('Layer Loaded...');
@@ -35,3 +35,4 @@ var checkExist = setInterval(function() {
 		console.log('Layer undefined...');
 	}
 }, 1000);
+*/

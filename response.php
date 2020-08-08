@@ -5,30 +5,21 @@ ob_start();
 require_once 'layer_api.php';
 require_once 'common.php';
 
-
-$fallback_url = $_POST['fallback_url'];
-
-
-if(!isset($_POST['layer_payment_id']) || empty($_POST['layer_payment_id'])){
-
-    header('Location: '.$fallback_url);
-    return NULL ;
-}
 $error = "";
 $status = "";
-try {
 
+if(!isset($_POST['layer_payment_id']) || empty($_POST['layer_payment_id'])){
+	$error = "Invalid response.";    
+}
+try {
     $data = array(
         'layer_pay_token_id'    => $_POST['layer_pay_token_id'],
         'layer_order_amount'    => $_POST['layer_order_amount'],
         'tranid'     			=> $_POST['tranid'],
     );
 
-    if(verify_hash($data,$_POST['hash'],$access_key,$secret_key) && !empty($data['tranid'])){
-
-        $env = $sandbox;
-        if($env != "yes"){  $env = "live"; }
-        $layer_api = new LayerApi($env,$access_key,$secret_key);
+    if(empty($error) && verify_hash($data,$_POST['hash'],$accesskey,$secretkey) && !empty($data['tranid'])){
+        $layer_api = new LayerApi($environment,$accesskey,$secretkey);
         $payment_data = $layer_api->get_payment_details($_POST['layer_payment_id']);
 
 
@@ -81,7 +72,6 @@ try {
 <title>PHP Kit for Layer Payment</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="<?php echo $remote_script;?>"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
 
@@ -111,19 +101,10 @@ try {
 	</div>
     <div id="alertinfo" class="dv">
     <?php 
-		echo "<strong>Transaction Id: ". $_POST['tranid']."<br />";
-        if(!empty($error))
+		if(!empty($error))
             echo $error;
         else
-            echo $status;
-		
-		echo "</strong><br /><br /><br /><strong>Response Parameters:</strong><br />";
-		foreach($_POST as $key=>$value)
-			echo $key ." : " .$value."<br />";
-		
-		echo "<br /><br /><strong>Payment details API Response:</strong><br />";
-		var_dump($payment_data);
-		
+            echo $status;		
     ?>
     </div>
     <div id="go" class="dv">
