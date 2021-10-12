@@ -16,7 +16,7 @@ require_once 'common.php';
 
 //main logic
 $error = '';
-$tranid=date("ymd").'-'.rand(1,100);
+$tranid=date("ymd").'-'.rand(1,100000);
 
 $sample_data['mtx']=$tranid; //unique transaction id to be passed for each transaction 
 $layer_api = new LayerApi($environment,$accesskey,$secretkey);
